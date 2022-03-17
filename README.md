@@ -9,4 +9,8 @@ Planned in future versions:
 - dark theme
 - calendar view: year, week
 
+
+![](ExampleCalendar.gif)
+
+
 ![Alt](https://repobeats.axiom.co/api/embed/555821422c3229e953366044e1f5fc34a37fa68f.svg "Repobeats analytics image")
