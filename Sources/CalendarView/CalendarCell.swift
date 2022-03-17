@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class CalendarCell: UICollectionViewCell {
   private lazy var selectionBackgroundView: UIView = {

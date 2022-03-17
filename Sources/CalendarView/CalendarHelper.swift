@@ -68,7 +68,7 @@ class CalendarHelper {
     let coloredDays: [CalendarDay] = days.map { generatedDay in
       var coloredDay = generatedDay
       selectedDays.forEach({ selectedDay in
-        if selectedDay.date == coloredDay.date {
+        if selectedDay.date.hasSame(as: coloredDay.date) {
           coloredDay.color = selectedDay.color
         }
       })

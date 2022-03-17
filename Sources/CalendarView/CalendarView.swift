@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 public class CalendarView: UIView {
   private var monthLabel: UILabel = UILabel()
@@ -43,7 +44,7 @@ public class CalendarView: UIView {
   private lazy var days: [CalendarDay] = CalendarHelper().generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
   private var selectColor: UIColor
 
-  init(baseDate: Date, selectColor: UIColor) {
+  public init(baseDate: Date, selectColor: UIColor) {
     self.selectColor = selectColor
     self.baseDate = baseDate
     super.init(frame: .zero)
@@ -64,14 +65,14 @@ public class CalendarView: UIView {
   private func setShevronBtns() {
     addSubview(leftShevronBtn)
     addSubview(rightShevronBtn)
-    leftShevronBtn.setImage(UIImage(named: "calendarShevronLeft")?.withRenderingMode(.alwaysTemplate), for: .normal)
+    leftShevronBtn.setImage(UIUtils.getIconByName("calendarShevronLeft")?.withRenderingMode(.alwaysTemplate), for: .normal)
     leftShevronBtn.addTarget(self, action: #selector(pressLeftBtn), for: .touchUpInside)
     leftShevronBtn.tintColor = selectColor
     leftShevronBtn.snp.makeConstraints { make in
       make.left.equalToSuperview().inset(UIUtils.screenPadding)
       make.centerY.equalTo(monthLabel)
     }
-    rightShevronBtn.setImage(UIImage(named: "calendarShevronRight")?.withRenderingMode(.alwaysTemplate), for: .normal)
+    rightShevronBtn.setImage(UIUtils.getIconByName("calendarShevronRight")?.withRenderingMode(.alwaysTemplate), for: .normal)
     rightShevronBtn.addTarget(self, action: #selector(pressRightBtn), for: .touchUpInside)
     rightShevronBtn.tintColor = selectColor
     rightShevronBtn.snp.makeConstraints { make in
@@ -106,7 +107,7 @@ public class CalendarView: UIView {
     let weekTexts = ["sun", "mon", "tue", "wed", "thur", "fri", "sat"]
     weekTexts.forEach { text in
       let label = UILabel()
-      label.text = text.localized
+      label.text = text
       label.font = UIUtils.subtitleFont
       label.textColor = .gray
       label.textAlignment = .center
@@ -124,6 +125,7 @@ public class CalendarView: UIView {
     collectionView.register(CalendarCell.self, forCellWithReuseIdentifier: "cellId")
     collectionView.delegate = self
     collectionView.dataSource = self
+    collectionView.backgroundColor = .white
     addSubview(collectionView)
     collectionView.snp.makeConstraints { make in
       make.top.equalTo(daysOfWeekStackView.snp.bottom)
@@ -134,11 +136,11 @@ public class CalendarView: UIView {
 }
 
 extension CalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return days.count
   }
 
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+  public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! CalendarCell
     cell.day = days[indexPath.row]
     cell.selectColor = selectColor
@@ -147,13 +149,13 @@ extension CalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
 }
 
 extension CalendarView: UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+  public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let day = days[indexPath.row]
     print("### delected day", day)
     selectedDateChanged?(day.date)
   }
 
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+  public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     let size = (frame.size.width - 30) / 8
     return CGSize(width: size, height: size)
   }
