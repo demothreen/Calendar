@@ -33,7 +33,7 @@ public class CalendarView: UIView {
     dateFormatter.setLocalizedDateFormatFromTemplate("MMMM y")
     return dateFormatter
   }()
-  public var selectedDateChanged: ((Date) -> Void)?
+  public var selectedDateChanged: ((CalendarDay) -> Void)?
   public var baseDate: Date = Date() {
     didSet {
       days = CalendarHelper().generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
@@ -107,7 +107,7 @@ public class CalendarView: UIView {
     let weekTexts = ["sun", "mon", "tue", "wed", "thur", "fri", "sat"]
     weekTexts.forEach { text in
       let label = UILabel()
-      label.text = text
+      label.text = text.localizedFromModule
       label.font = UIUtils.subtitleFont
       label.textColor = .gray
       label.textAlignment = .center
@@ -151,8 +151,7 @@ extension CalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
 extension CalendarView: UICollectionViewDelegateFlowLayout {
   public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let day = days[indexPath.row]
-    print("### delected day", day)
-    selectedDateChanged?(day.date)
+    selectedDateChanged?(day)
   }
 
   public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  RedDays
+
+  Created by demothreen on 15.11.2021.
+  
+*/
+
+"mon" = "пн";
+"tue" = "вт";
+"wed" = "ср";
+"thur" = "чт";
+"fri" = "пт";
+"sat" = "сб";
+"sun" = "вс";

@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+
+  Created by demothreen on 15.11.2021.
+  
+*/
+
+"mon" = "mon";
+"tue" = "tue";
+"wed" = "wed";
+"thur" = "thur";
+"fri" = "fri";
+"sat" = "sat";
+"sun" = "sun";
