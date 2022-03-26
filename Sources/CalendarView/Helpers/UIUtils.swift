@@ -10,11 +10,11 @@ import UIKit
 class UIUtils {
   public static let screenPadding: CGFloat = 15
   public static var titleFont: UIFont? = {
-    return UIFont(name: "Chalkboard SE", size: 20)
+    return UIFont.systemFont(ofSize: 20)
   }()
 
   public static var subtitleFont: UIFont? = {
-    return UIFont(name: "Chalkboard SE", size: 14)
+    return UIFont.systemFont(ofSize: 14)
   }()
 
   public static func getIconByName(_ name: String) -> UIImage? {

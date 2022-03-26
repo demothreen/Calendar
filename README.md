@@ -6,7 +6,6 @@ You can add CalendarView to your UIViewController
 
 Planned in future versions:
 - support for horizontal orientation
-- dark theme
 - calendar view: year, week
 
 <img src="https://github.com/demothreen/Calendar/blob/main/ExampleCalendar.gif" width="150">

@@ -108,8 +108,8 @@ public class CalendarView: UIView {
     weekTexts.forEach { text in
       let label = UILabel()
       label.text = text.localizedFromModule
-      label.font = UIUtils.subtitleFont
-      label.textColor = .gray
+      label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+      label.textColor = traitCollection.userInterfaceStyle == .dark ? .white.withAlphaComponent(0.6) : .black.withAlphaComponent(0.6)
       label.textAlignment = .center
       daysOfWeekStackView.addArrangedSubview(label)
     }
@@ -125,7 +125,7 @@ public class CalendarView: UIView {
     collectionView.register(CalendarCell.self, forCellWithReuseIdentifier: "cellId")
     collectionView.delegate = self
     collectionView.dataSource = self
-    collectionView.backgroundColor = .white
+    collectionView.backgroundColor = .clear
     addSubview(collectionView)
     collectionView.snp.makeConstraints { make in
       make.top.equalTo(daysOfWeekStackView.snp.bottom)
