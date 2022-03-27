@@ -72,12 +72,13 @@ class CalendarCell: UICollectionViewCell {
     dayOfMonthLabel.snp.makeConstraints({ make in
       make.centerY.centerX.equalTo(contentView)
     })
+    let size = contentView.frame.size.height - 5
     selectionBackgroundView.snp.makeConstraints({ make in
       make.centerY.centerX.equalTo(contentView)
-      make.width.height.equalTo(contentView)
+      make.width.height.equalTo(size)
     })
-    selectionBackgroundView.layer.cornerRadius = contentView.frame.size.width / 2
-    selectionBackgroundView.layer.borderWidth = 2
+    selectionBackgroundView.layer.cornerRadius = size / 2
+    selectionBackgroundView.layer.borderWidth = 1
     selectionBackgroundView.layer.masksToBounds = true
   }
 

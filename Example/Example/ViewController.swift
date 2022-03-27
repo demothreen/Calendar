@@ -37,7 +37,7 @@ class ViewController: UIViewController {
     let height = calendarView.collectionView.collectionViewLayout.collectionViewContentSize.height
     let viewHeight: CGFloat = height > 0 ? height + 100 : UIScreen.main.bounds.width
     setCalendarHeight(viewHeight)
-    calendarView.layoutSubviews()
+    calendarView.collectionView.collectionViewLayout.invalidateLayout()
   }
 
   private func setCalendarHeight(_ height: CGFloat) {
