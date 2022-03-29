@@ -1,6 +1,5 @@
 //
 //  CalendarHelper.swift
-//  RedDays
 //
 //  Created by demothreen on 08.03.2022.
 //
@@ -68,12 +67,19 @@ class CalendarHelper {
     let coloredDays: [CalendarDay] = days.map { generatedDay in
       var coloredDay = generatedDay
       selectedDays.forEach({ selectedDay in
-        if selectedDay.date.hasSame(as: coloredDay.date) {
-          coloredDay.color = selectedDay.color
+        if selectedDay.isEquallyEveryYear {
+          if selectedDay.date.hasSameDayAndMonth(as: coloredDay.date) {
+            coloredDay.color = selectedDay.color
+          }
+        } else {
+          if selectedDay.date.hasSame(as: coloredDay.date) {
+            coloredDay.color = selectedDay.color
+          }
         }
       })
       return coloredDay
     }
+
     return coloredDays
   }
 

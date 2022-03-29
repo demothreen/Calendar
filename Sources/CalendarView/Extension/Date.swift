@@ -22,4 +22,14 @@ public extension Date {
     let calendar = Calendar(identifier: .gregorian)
     return calendar.isDate(date, inSameDayAs: self)
   }
+
+
+  // MARK: - The method checks that the day and month are the same as the given date
+  func hasSameDayAndMonth(as date: Date) -> Bool {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd MM"
+    let date1String = dateFormatter.string(from: self)
+    let date2String = dateFormatter.string(from: date)
+    return date1String == date2String
+  }
 }

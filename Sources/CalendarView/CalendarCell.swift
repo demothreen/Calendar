@@ -1,6 +1,5 @@
 //
 //  CalendarCell.swift
-//  RedDays
 //
 //  Created by demothreen on 08.03.2022.
 //

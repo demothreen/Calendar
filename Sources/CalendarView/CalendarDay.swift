@@ -1,6 +1,5 @@
 //
 //  CalendarDay.swift
-//  RedDays
 //
 //  Created by demothreen on 10.03.2022.
 //
@@ -13,12 +12,21 @@ public struct CalendarDay {
   public var color: UIColor
   public let isSelected: Bool
   public let isWithinDisplayedMonth: Bool
+  public let isEquallyEveryYear: Bool
 
-  public init(date: Date, number: String, color: UIColor = .clear, isSelected: Bool, isWithinDisplayedMonth: Bool) {
+  public init(
+    date: Date,
+    number: String,
+    color: UIColor = .clear,
+    isSelected: Bool,
+    isWithinDisplayedMonth: Bool,
+    isEquallyEveryYear: Bool = false
+  ) {
     self.date = date
     self.number = number
     self.color = color
     self.isSelected = isSelected
     self.isWithinDisplayedMonth = isWithinDisplayedMonth
+    self.isEquallyEveryYear = isEquallyEveryYear
   }
 }
