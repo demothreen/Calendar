@@ -8,6 +8,7 @@
 import Foundation
 
 public extension Date {
+  var calendar: Calendar { Calendar.current }
   var numberOfDate: String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "d"
@@ -31,5 +32,13 @@ public extension Date {
     let date1String = dateFormatter.string(from: self)
     let date2String = dateFormatter.string(from: date)
     return date1String == date2String
+  }
+
+  var weekdayStartMon: Int {
+    (calendar.component(.weekday, from: self) - calendar.firstWeekday + 7) % 7 + 1
+  }
+
+  var weekdayStartSun: Int {
+    calendar.component(.weekday, from: self)
   }
 }

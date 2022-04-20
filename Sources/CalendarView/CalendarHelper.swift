@@ -18,15 +18,21 @@ class CalendarHelper {
     dateFormatter.dateFormat = "d"
     return dateFormatter
   }()
+  private var firstDayIsMonday: Bool = false
   let calendar = Calendar(identifier: .gregorian)
+
+  init(_ firstDayIsMonday: Bool) {
+    self.firstDayIsMonday = firstDayIsMonday
+  }
 
   func monthLabelText(from date: Date) -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.calendar = Calendar(identifier: .gregorian)
+    dateFormatter.calendar = calendar
     dateFormatter.locale = Locale.autoupdatingCurrent
     dateFormatter.setLocalizedDateFormatFromTemplate("MMMM y")
     return dateFormatter.string(from: date)
   }
+
   func plusMonth(date: Date) -> Date {
     return calendar.date(byAdding: .month, value: 1, to: date)!
   }
@@ -35,14 +41,13 @@ class CalendarHelper {
     return calendar.date(byAdding: .month, value: -1, to: date)!
   }
 
-  func monthMetadata(for baseDate: Date) throws -> MonthMetadata {
-    guard let numberOfDaysInMonth = calendar.range(of: .day, in: .month, for: baseDate)?.count,
-      let firstDayOfMonth = calendar.date(
-        from: calendar.dateComponents([.year, .month], from: baseDate))
-      else {
-        throw CalendarDataError.metadataGeneration
+  private func monthMetadata(for baseDate: Date) throws -> MonthMetadata {
+    guard let numberOfDaysInMonth = calendar.range(of: .day, in: .month, for: baseDate.addDay(1)!)?.count,
+          let firstDayOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: baseDate.addDay(1)!))
+    else {
+      throw CalendarDataError.metadataGeneration
     }
-    let firstDayWeekday = calendar.component(.weekday, from: firstDayOfMonth)
+    let firstDayWeekday = firstDayIsMonday ? firstDayOfMonth.weekdayStartMon : firstDayOfMonth.weekdayStartSun
     return MonthMetadata(
       numberOfDays: numberOfDaysInMonth,
       firstDay: firstDayOfMonth,
@@ -56,7 +61,6 @@ class CalendarHelper {
     let numberOfDaysInMonth = metadata.numberOfDays
     let offsetInInitialRow = metadata.firstDayWeekday
     let firstDayOfMonth = metadata.firstDay
-
     var days: [CalendarDay] = (1..<(numberOfDaysInMonth + offsetInInitialRow))
       .map { day in
         let isWithinDisplayedMonth = day >= offsetInInitialRow
@@ -90,7 +94,7 @@ class CalendarHelper {
 
   func generateStartOfNextMonth(using firstDayOfDisplayedMonth: Date) -> [CalendarDay] {
     guard let lastDayInMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: firstDayOfDisplayedMonth) else { return [] }
-    let additionalDays = 7 - calendar.component(.weekday, from: lastDayInMonth)
+    let additionalDays = 7 - (firstDayIsMonday ? lastDayInMonth.weekdayStartMon : lastDayInMonth.weekdayStartSun)
     guard additionalDays > 0 else {
       return []
     }

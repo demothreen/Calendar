@@ -22,7 +22,7 @@ public class CalendarView: UIView {
   }()
   public var selectedDates: [CalendarDay] = [] {
     didSet {
-      days = CalendarHelper().generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
+      days = CalendarHelper(firstDayIsMonday).generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
     }
   }
   private lazy var dateFormatter: DateFormatter = {
@@ -35,17 +35,19 @@ public class CalendarView: UIView {
   public var selectedDateChanged: ((CalendarDay) -> Void)?
   public var baseDate: Date = Date() {
     didSet {
-      days = CalendarHelper().generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
+      days = CalendarHelper(firstDayIsMonday).generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
       collectionView.reloadData()
-      monthLabel.text = CalendarHelper().monthLabelText(from: baseDate)
+      monthLabel.text = CalendarHelper(firstDayIsMonday).monthLabelText(from: baseDate)
     }
   }
-  private lazy var days: [CalendarDay] = CalendarHelper().generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
+  private lazy var days: [CalendarDay] = CalendarHelper(firstDayIsMonday).generateDaysInMonth(for: baseDate, selectedDays: selectedDates)
   private var selectColor: UIColor
+  private var firstDayIsMonday: Bool = false
 
-  public init(baseDate: Date, selectColor: UIColor) {
+  public init(baseDate: Date, selectColor: UIColor, firstDayIsMonday: Bool = false) {
     self.selectColor = selectColor
     self.baseDate = baseDate
+    self.firstDayIsMonday = firstDayIsMonday
     super.init(frame: .zero)
     prepare()
   }
@@ -82,18 +84,18 @@ public class CalendarView: UIView {
   }
 
   @objc private func pressLeftBtn() {
-    baseDate = CalendarHelper().minusMonth(date: baseDate)
+    baseDate = CalendarHelper(firstDayIsMonday).minusMonth(date: baseDate)
   }
 
   @objc private func pressRightBtn() {
-    baseDate = CalendarHelper().plusMonth(date: baseDate)
+    baseDate = CalendarHelper(firstDayIsMonday).plusMonth(date: baseDate)
   }
 
   private func setMonthLabel() {
     addSubview(monthLabel)
     monthLabel.font = UIUtils.titleFont
     monthLabel.textColor = selectColor
-    monthLabel.text = CalendarHelper().monthLabelText(from: baseDate)
+    monthLabel.text = CalendarHelper(firstDayIsMonday).monthLabelText(from: baseDate)
     monthLabel.snp.makeConstraints { make in
       make.top.equalTo(snp.top).inset(UIUtils.screenPadding)
       make.centerX.equalToSuperview()
@@ -103,7 +105,8 @@ public class CalendarView: UIView {
 
   private func setWeekStackView() {
     addSubview(daysOfWeekStackView)
-    let weekTexts = ["sun", "mon", "tue", "wed", "thur", "fri", "sat"]
+    var weekTexts = ["mon", "tue", "wed", "thur", "fri", "sat"]
+    weekTexts.insert("sun", at: firstDayIsMonday ? 6 : 0)
     weekTexts.forEach { text in
       let label = UILabel()
       label.text = text.localizedFromModule
