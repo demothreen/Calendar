@@ -7,7 +7,7 @@
 import UIKit
 import SnapKit
 
-public class CalendarView: UIView {
+public class MonthCalendarView: UIView {
   private var monthLabel: UILabel = UILabel()
   private var leftShevronBtn: UIButton = UIButton()
   private var rightShevronBtn: UIButton = UIButton()
@@ -137,7 +137,7 @@ public class CalendarView: UIView {
   }
 }
 
-extension CalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MonthCalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
   public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return days.count
   }
@@ -150,7 +150,7 @@ extension CalendarView: UICollectionViewDelegate, UICollectionViewDataSource {
   }
 }
 
-extension CalendarView: UICollectionViewDelegateFlowLayout {
+extension MonthCalendarView: UICollectionViewDelegateFlowLayout {
   public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let day = days[indexPath.row]
     selectedDateChanged?(day)
