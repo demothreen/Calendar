@@ -124,7 +124,7 @@ public class MonthCalendarView: UIView {
   }
 
   private func setCollectionView() {
-    collectionView.register(CalendarCell.self, forCellWithReuseIdentifier: "cellId")
+    collectionView.registerCell(CalendarCell.self)
     collectionView.delegate = self
     collectionView.dataSource = self
     collectionView.backgroundColor = .clear
@@ -143,7 +143,7 @@ extension MonthCalendarView: UICollectionViewDelegate, UICollectionViewDataSourc
   }
 
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! CalendarCell
+    let cell = collectionView.dequeueCell(CalendarCell.self, for: indexPath)
     cell.day = days[indexPath.row]
     cell.selectColor = selectColor
     return cell
