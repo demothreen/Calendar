@@ -15,6 +15,12 @@ public extension Date {
     return dateFormatter.string(from: self)
   }
 
+  var numberOfMonth: String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "M"
+    return dateFormatter.string(from: self)
+  }
+
   func addDay(_ value: Int) -> Date? {
     return Calendar.current.date(byAdding: .day, value: value, to: self)
   }
@@ -23,7 +29,6 @@ public extension Date {
     let calendar = Calendar(identifier: .gregorian)
     return calendar.isDate(date, inSameDayAs: self)
   }
-
 
   // MARK: - The method checks that the day and month are the same as the given date
   func hasSameDayAndMonth(as date: Date) -> Bool {
@@ -40,5 +45,13 @@ public extension Date {
 
   var weekdayStartSun: Int {
     calendar.component(.weekday, from: self)
+  }
+
+  func monthLabelText() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.calendar = calendar
+    dateFormatter.locale = Locale.autoupdatingCurrent
+    dateFormatter.setLocalizedDateFormatFromTemplate("MMMM y")
+    return dateFormatter.string(from: self)
   }
 }

@@ -12,33 +12,27 @@ struct MonthMetadata {
   let firstDayWeekday: Int
 }
 
+public enum CalendarType: Int {
+  case month
+  case week
+}
+
 class CalendarHelper {
   private lazy var dateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "d"
     return dateFormatter
   }()
-  private var firstDayIsMonday: Bool = false
+  var firstDayIsMonday: Bool = false
   let calendar = Calendar(identifier: .gregorian)
-
-  init(_ firstDayIsMonday: Bool) {
-    self.firstDayIsMonday = firstDayIsMonday
+  var selectedDays: [CalendarDay] = []
+  
+  func addMonth(date: Date, month: Int) -> Date {
+    return calendar.date(byAdding: .month, value: month, to: date)!
   }
 
-  func monthLabelText(from date: Date) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.calendar = calendar
-    dateFormatter.locale = Locale.autoupdatingCurrent
-    dateFormatter.setLocalizedDateFormatFromTemplate("MMMM y")
-    return dateFormatter.string(from: date)
-  }
-
-  func plusMonth(date: Date) -> Date {
-    return calendar.date(byAdding: .month, value: 1, to: date)!
-  }
-
-  func minusMonth(date: Date) -> Date {
-    return calendar.date(byAdding: .month, value: -1, to: date)!
+  func addDays(date: Date, days: Int) -> Date {
+    return calendar.date(byAdding: .day, value: days, to: date)!
   }
 
   private func monthMetadata(for baseDate: Date) throws -> MonthMetadata {
@@ -54,7 +48,7 @@ class CalendarHelper {
       firstDayWeekday: firstDayWeekday)
   }
 
-  func generateDaysInMonth(for baseDate: Date, selectedDays: [CalendarDay]) -> [CalendarDay] {
+  func generateDaysInMonth(for baseDate: Date) -> [CalendarDay] {
     guard let metadata = try? monthMetadata(for: baseDate) else {
       preconditionFailure("An error occurred when generating the metadata for \(baseDate)")
     }
@@ -68,6 +62,29 @@ class CalendarHelper {
         return generateDay(offsetBy: dayOffset, for: firstDayOfMonth, isWithinDisplayedMonth: isWithinDisplayedMonth)
       }
     days += generateStartOfNextMonth(using: firstDayOfMonth)
+    return coloredDays(for: days)
+  }
+
+  func generateDaysInWeek(for baseDate: Date) -> [CalendarDay] {
+    var days: [CalendarDay] = []
+    var current = sundayForDate(date: baseDate)
+    let nextSunday = addDays(date: current, days: 7)
+
+    while (current < nextSunday) {
+      days.append(
+        CalendarDay(
+          date: current,
+          number: current.numberOfDate,
+          isSelected: calendar.isDate(current, inSameDayAs: Date()),
+          isWithinDisplayedMonth: current.numberOfMonth == baseDate.numberOfMonth
+        )
+      )
+      current = addDays(date: current, days: 1)
+    }
+    return coloredDays(for: days)
+  }
+
+  private func coloredDays(for days: [CalendarDay]) -> [CalendarDay] {
     let coloredDays: [CalendarDay] = days.map { generatedDay in
       var coloredDay = generatedDay
       selectedDays.forEach({ selectedDay in
@@ -83,7 +100,6 @@ class CalendarHelper {
       })
       return coloredDay
     }
-
     return coloredDays
   }
 
@@ -105,5 +121,19 @@ class CalendarHelper {
 
   enum CalendarDataError: Error {
     case metadataGeneration
+  }
+
+  func sundayForDate(date: Date) -> Date {
+    var current = date
+    let oneWeekAgo = addDays(date: current, days: -7)
+
+    while(current > oneWeekAgo) {
+      let currentWeekDay = firstDayIsMonday ? current.weekdayStartMon : current.weekdayStartSun
+      if currentWeekDay == 1 {
+        return current
+      }
+      current = addDays(date: current, days: -1)
+    }
+    return current
   }
 }
