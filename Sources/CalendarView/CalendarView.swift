@@ -27,7 +27,6 @@ public class CalendarView: UIView {
     didSet { updateCalendarViewByType() }
   }
   private var selectColor: UIColor
-  private var firstDayIsMonday: Bool = false
   public var presentationType: CalendarType = .month {
     didSet { updateCalendarViewByType() }
   }
@@ -35,13 +34,11 @@ public class CalendarView: UIView {
   private lazy var days = [CalendarDay]()
   private var headerView = CalendarHeaderView()
 
-  public init(baseDate: Date, selectColor: UIColor, firstDayIsMonday: Bool = false) {
+  public init(baseDate: Date, selectColor: UIColor) {
     self.selectColor = selectColor
     self.baseDate = baseDate
-    self.firstDayIsMonday = firstDayIsMonday
     super.init(frame: .zero)
     self.days = calendarHelper.generateDaysInMonth(for: baseDate)
-    calendarHelper.firstDayIsMonday = firstDayIsMonday
     prepare()
   }
 
@@ -59,7 +56,6 @@ public class CalendarView: UIView {
     headerView.leftShevronBtn.addTarget(self, action: #selector(pressLeftBtn), for: .touchUpInside)
     headerView.rightShevronBtn.addTarget(self, action: #selector(pressRightBtn), for: .touchUpInside)
     headerView.monthLabel.text = baseDate.monthLabelText()
-    headerView.firstDayIsMonday = firstDayIsMonday
     headerView.selectColor = selectColor
     headerView.snp.makeConstraints { make in
       make.top.equalTo(snp.top)

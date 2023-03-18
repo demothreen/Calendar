@@ -12,19 +12,26 @@ struct MonthMetadata {
   let firstDayWeekday: Int
 }
 
+enum CalendarDataError: Error {
+  case metadataGeneration
+}
+
 public enum CalendarType: Int {
   case month
   case week
 }
 
-class CalendarHelper {
+final class CalendarHelper {
   private lazy var dateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "d"
     return dateFormatter
   }()
-  var firstDayIsMonday: Bool = false
-  let calendar = Calendar(identifier: .gregorian)
+  lazy var calendar: Calendar = {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.firstWeekday = 2 // always monday
+    return calendar
+  }()
   var selectedDays: [CalendarDay] = []
   
   func addMonth(date: Date, month: Int) -> Date {
@@ -41,7 +48,7 @@ class CalendarHelper {
     else {
       throw CalendarDataError.metadataGeneration
     }
-    let firstDayWeekday = firstDayIsMonday ? firstDayOfMonth.weekdayStartMon : firstDayOfMonth.weekdayStartSun
+    let firstDayWeekday = getCurrentWeekDay(from: firstDayOfMonth)
     return MonthMetadata(
       numberOfDays: numberOfDaysInMonth,
       firstDay: firstDayOfMonth,
@@ -110,7 +117,8 @@ class CalendarHelper {
 
   func generateStartOfNextMonth(using firstDayOfDisplayedMonth: Date) -> [CalendarDay] {
     guard let lastDayInMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: firstDayOfDisplayedMonth) else { return [] }
-    let additionalDays = 7 - (firstDayIsMonday ? lastDayInMonth.weekdayStartMon : lastDayInMonth.weekdayStartSun)
+
+    let additionalDays = 7 - getCurrentWeekDay(from: lastDayInMonth)
     guard additionalDays > 0 else {
       return []
     }
@@ -119,8 +127,8 @@ class CalendarHelper {
     return days
   }
 
-  enum CalendarDataError: Error {
-    case metadataGeneration
+  private func getCurrentWeekDay(from date: Date) -> Int {
+    return (calendar.component(.weekday, from: date) - calendar.firstWeekday + 7) % 7 + 1
   }
 
   func sundayForDate(date: Date) -> Date {
@@ -128,7 +136,7 @@ class CalendarHelper {
     let oneWeekAgo = addDays(date: current, days: -7)
 
     while(current > oneWeekAgo) {
-      let currentWeekDay = firstDayIsMonday ? current.weekdayStartMon : current.weekdayStartSun
+      let currentWeekDay = getCurrentWeekDay(from: current)
       if currentWeekDay == 1 {
         return current
       }

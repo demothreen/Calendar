@@ -14,9 +14,6 @@ class CalendarHeaderView: UIView {
   var selectColor: UIColor = .black {
     didSet { setNeedsLayout() }
   }
-  var firstDayIsMonday: Bool = false {
-    didSet { updateStackViewSubviews() }
-  }
   private var daysOfWeekStackView = UIStackView()
 
   override init(frame: CGRect) {
@@ -66,8 +63,7 @@ class CalendarHeaderView: UIView {
     if daysOfWeekStackView.arrangedSubviews.count > 0 {
       daysOfWeekStackView.subviews.forEach { $0.removeFromSuperview() }
     }
-    var weekTexts = ["mon", "tue", "wed", "thur", "fri", "sat"]
-    weekTexts.insert("sun", at: firstDayIsMonday ? 6 : 0)
+    let weekTexts = ["mon", "tue", "wed", "thur", "fri", "sat", "sun"]
     weekTexts.forEach { text in
       let label = UILabel()
       label.text = text.localizedFromModule

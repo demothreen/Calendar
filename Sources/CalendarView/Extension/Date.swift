@@ -8,7 +8,6 @@
 import Foundation
 
 public extension Date {
-  var calendar: Calendar { Calendar.current }
   var numberOfDate: String {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "d"
@@ -39,15 +38,9 @@ public extension Date {
     return date1String == date2String
   }
 
-  var weekdayStartMon: Int {
-    (calendar.component(.weekday, from: self) - calendar.firstWeekday + 7) % 7 + 1
-  }
-
-  var weekdayStartSun: Int {
-    calendar.component(.weekday, from: self)
-  }
-
   func monthLabelText() -> String {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.firstWeekday = 2
     let dateFormatter = DateFormatter()
     dateFormatter.calendar = calendar
     dateFormatter.locale = Locale.autoupdatingCurrent
