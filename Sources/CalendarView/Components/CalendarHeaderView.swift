@@ -68,7 +68,7 @@ class CalendarHeaderView: UIView {
       let label = UILabel()
       label.text = text.localizedFromModule
       label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-      label.textColor = traitCollection.userInterfaceStyle == .dark ? .white.withAlphaComponent(0.6) : .black.withAlphaComponent(0.6)
+      label.textColor = .dayColor.withAlphaComponent(0.6)
       label.textAlignment = .center
       daysOfWeekStackView.addArrangedSubview(label)
     }
