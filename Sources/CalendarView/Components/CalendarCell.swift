@@ -35,8 +35,7 @@ class CalendarCell: UICollectionViewCell {
     didSet{
       UIView.animate(withDuration: 0.3) { [self] in
         selectionBackgroundView.backgroundColor = isSelected ? selectColor : day?.color
-        let defaultColor: UIColor = traitCollection.userInterfaceStyle == .dark ? .white : .black
-        dayOfMonthLabel.textColor = isSelected ? .white : defaultColor.withAlphaComponent(day?.isWithinDisplayedMonth ?? false ? 1 : 0.2)
+        dayOfMonthLabel.textColor = isSelected ? .white : .dayColor.withAlphaComponent(day?.isWithinDisplayedMonth ?? false ? 1 : 0.2)
       }
     }
   }
@@ -47,8 +46,7 @@ class CalendarCell: UICollectionViewCell {
       self.selectionBackgroundView.backgroundColor = day.color
       //      self.selectionBackgroundView.layer.borderColor = day.isSelected ? UIColor.sectionColor.cgColor : UIColor.clear.cgColor
       dayOfMonthLabel.text = day.number
-      let defaultColor: UIColor = traitCollection.userInterfaceStyle == .dark ? .white : .black
-      dayOfMonthLabel.textColor = defaultColor.withAlphaComponent(day.isWithinDisplayedMonth ? 1 : 0.2)
+      dayOfMonthLabel.textColor = .dayColor.withAlphaComponent(day.isWithinDisplayedMonth ? 1 : 0.2)
       accessibilityLabel = accessibilityDateFormatter.string(from: day.date)
     }
   }
