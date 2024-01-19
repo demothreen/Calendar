@@ -24,7 +24,7 @@ public enum CalendarType: Int {
 final class CalendarHelper {
   private lazy var dateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "d"
+    dateFormatter.dateFormat = DateFormat.d.rawValue
     return dateFormatter
   }()
   lazy var calendar: Calendar = {

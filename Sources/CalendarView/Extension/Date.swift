@@ -7,16 +7,27 @@
 
 import Foundation
 
+public enum DateFormat: String {
+  case ddMMMM = "dd MMMM"
+  case ddMMMMyyyy = "dd MMMM yyyy"
+  case eeeedMMMMyyyy = "EEEE, d MMMM, yyyy"
+  case EEEEMMMd = "EEEE, MMM d"
+  case MMMMyyyy = "MMMM yyyy"
+  case ddMM = "dd MM"
+  case d = "d"
+  case M = "M"
+}
+
 public extension Date {
   var numberOfDate: String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "d"
+    dateFormatter.dateFormat = DateFormat.d.rawValue
     return dateFormatter.string(from: self)
   }
 
   var numberOfMonth: String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "M"
+    dateFormatter.dateFormat = DateFormat.M.rawValue
     return dateFormatter.string(from: self)
   }
 
@@ -32,19 +43,19 @@ public extension Date {
   // MARK: - The method checks that the day and month are the same as the given date
   func hasSameDayAndMonth(as date: Date) -> Bool {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd MM"
+    dateFormatter.dateFormat = DateFormat.ddMM.rawValue
     let date1String = dateFormatter.string(from: self)
     let date2String = dateFormatter.string(from: date)
     return date1String == date2String
   }
 
-  func monthLabelText() -> String {
+  func monthLabelText(with dateFormat: DateFormat) -> String {
     var calendar = Calendar(identifier: .gregorian)
     calendar.firstWeekday = 2
     let dateFormatter = DateFormatter()
     dateFormatter.calendar = calendar
     dateFormatter.locale = Locale.autoupdatingCurrent
-    dateFormatter.setLocalizedDateFormatFromTemplate("MMMM y")
-    return dateFormatter.string(from: self)
+    dateFormatter.setLocalizedDateFormatFromTemplate(dateFormat.rawValue)
+    return dateFormatter.string(from: self).capitalizingFirstLetter()
   }
 }
