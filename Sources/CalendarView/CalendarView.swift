@@ -32,11 +32,15 @@ public class CalendarView: UIView {
   }
   private var calendarHelper = CalendarHelper()
   private lazy var days = [CalendarDay]()
-  private var headerView = CalendarHeaderView()
+  private lazy var headerView = CalendarHeaderView(titlePosition: titlePosition)
+  private var titleDateFormat: DateFormat = .MMMMyyyy
+  private var titlePosition: TitlePosition = .center
 
-  public init(baseDate: Date, selectColor: UIColor) {
+  public init(baseDate: Date = Date(), selectColor: UIColor, titleDateFormat: DateFormat, titlePosition: TitlePosition = .center) {
     self.selectColor = selectColor
     self.baseDate = baseDate
+    self.titleDateFormat = titleDateFormat
+    self.titlePosition = titlePosition
     super.init(frame: .zero)
     self.days = calendarHelper.generateDaysInMonth(for: baseDate)
     prepare()
@@ -55,7 +59,7 @@ public class CalendarView: UIView {
     addSubview(headerView)
     headerView.leftShevronBtn.addTarget(self, action: #selector(pressLeftBtn), for: .touchUpInside)
     headerView.rightShevronBtn.addTarget(self, action: #selector(pressRightBtn), for: .touchUpInside)
-    headerView.monthLabel.text = baseDate.monthLabelText()
+    headerView.monthLabel.text = baseDate.monthLabelText(with: titleDateFormat)
     headerView.selectColor = selectColor
     headerView.snp.makeConstraints { make in
       make.top.equalTo(snp.top)
@@ -70,7 +74,7 @@ public class CalendarView: UIView {
       days = calendarHelper.generateDaysInWeek(for: baseDate)
     }
     collectionView.reloadData()
-    headerView.monthLabel.text = baseDate.monthLabelText()
+    headerView.monthLabel.text = baseDate.monthLabelText(with: titleDateFormat)
     collectionView.reloadData()
     layoutIfNeeded()
   }
@@ -100,7 +104,7 @@ public class CalendarView: UIView {
     collectionView.snp.makeConstraints { make in
       make.top.equalTo(headerView.snp.bottom)
       make.left.right.equalToSuperview().inset(UIUtils.screenPadding)
-      make.bottom.equalToSuperview().inset(-UIUtils.screenPadding)
+      make.bottom.equalToSuperview()
     }
   }
 }

@@ -14,9 +14,12 @@ class CalendarHeaderView: UIView {
   var selectColor: UIColor = .black {
     didSet { setNeedsLayout() }
   }
+  private let horizontalPadding: CGFloat = 25
+  private var titlePosition: TitlePosition
   private var daysOfWeekStackView = UIStackView()
 
-  override init(frame: CGRect) {
+  init(titlePosition: TitlePosition) {
+    self.titlePosition = titlePosition
     super.init(frame: .zero)
     setMonthLabel()
     setShevronBtns()
@@ -38,12 +41,16 @@ class CalendarHeaderView: UIView {
     addSubview(rightShevronBtn)
     leftShevronBtn.setImage(UIUtils.getIconByName("calendarShevronLeft")?.withRenderingMode(.alwaysTemplate), for: .normal)
     leftShevronBtn.snp.makeConstraints { make in
-      make.left.equalToSuperview().inset(UIUtils.screenPadding)
+      if titlePosition == .center {
+        make.left.equalToSuperview().inset(horizontalPadding)
+      } else {
+        make.right.equalTo(rightShevronBtn.snp.left).offset(-30)
+      }
       make.centerY.equalTo(monthLabel)
     }
     rightShevronBtn.setImage(UIUtils.getIconByName("calendarShevronRight")?.withRenderingMode(.alwaysTemplate), for: .normal)
     rightShevronBtn.snp.makeConstraints { make in
-      make.right.equalToSuperview().inset(UIUtils.screenPadding)
+      make.right.equalToSuperview().inset(horizontalPadding)
       make.centerY.equalTo(monthLabel)
       make.height.width.equalTo(30)
     }
@@ -52,9 +59,10 @@ class CalendarHeaderView: UIView {
   private func setMonthLabel() {
     addSubview(monthLabel)
     monthLabel.font = UIUtils.titleFont
+    monthLabel.textAlignment = titlePosition == .center ? .center : .left
     monthLabel.snp.makeConstraints { make in
       make.top.equalToSuperview().inset(UIUtils.screenPadding)
-      make.centerX.equalToSuperview()
+      make.left.right.equalToSuperview().inset(horizontalPadding)
       make.height.equalTo(30)
     }
   }
